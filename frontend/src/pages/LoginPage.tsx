@@ -22,13 +22,14 @@ export const LoginPage: React.FC = () => {
   const from = (location.state as any)?.from?.pathname || '/dashboard';
 
   const getErrorMessage = (err: any, fallback: string) => {
+    console.error('API Error details:', err?.response);
     if (!err.response) return 'Unable to connect to server. Please try again.';
     const data = err.response.data;
     if (typeof data === 'string') return data;
     if (data?.message) return data.message;
     if (data?.error) return data.error;
     if (typeof data === 'object') {
-      const messages = Object.values(data).filter(v => typeof v === 'string');
+      const messages = Object.values(data).filter(v => typeof v === 'string' && v.length > 0);
       if (messages.length > 0) return messages.join(', ');
     }
     return fallback;
@@ -59,18 +60,37 @@ export const LoginPage: React.FC = () => {
     setLoading(true);
 
     try {
-      await authApi.register({
+      const regRes = await authApi.register({
         username,
         email,
         password,
         firstName,
         lastName,
-        companyName
+        companyName,
+        role: 'CUSTOMER'
       });
-      // Auto login after registration
-      await login({ username, password });
-      navigate('/portal');
+      
+      if (regRes && regRes.token) {
+        localStorage.setItem('keystone_token', regRes.token);
+        localStorage.setItem('keystone_user', JSON.stringify({
+          id: regRes.userId,
+          username: regRes.username,
+          email: regRes.email,
+          role: regRes.role || 'CUSTOMER',
+          firstName: regRes.firstName,
+          lastName: regRes.lastName,
+          enabled: true,
+          customerId: regRes.customerId,
+          technicianId: regRes.technicianId,
+          createdAt: new Date().toISOString()
+        }));
+        window.location.href = '/portal';
+      } else {
+        await login({ username, password });
+        navigate('/portal');
+      }
     } catch (err: any) {
+      console.error('Registration Error:', err);
       setError(getErrorMessage(err, 'Registration failed. Please check your information.'));
     } finally {
       setLoading(false);
