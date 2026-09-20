@@ -43,7 +43,7 @@ public class DataInitializer implements CommandLineRunner {
         log.info("Seeding initial Project KEYSTONE database...");
 
         // 1. Admin & Manager
-        User admin = userRepository.save(User.builder()
+        userRepository.save(User.builder()
                 .username("admin")
                 .email("admin@keystone.com")
                 .password(passwordEncoder.encode("admin123"))
@@ -54,7 +54,7 @@ public class DataInitializer implements CommandLineRunner {
                 .enabled(true)
                 .build());
 
-        User manager = userRepository.save(User.builder()
+        userRepository.save(User.builder()
                 .username("manager")
                 .email("sarah.connor@keystone.com")
                 .password(passwordEncoder.encode("manager123"))
@@ -115,7 +115,7 @@ public class DataInitializer implements CommandLineRunner {
                 .enabled(true)
                 .build());
 
-        Technician tech3 = technicianRepository.save(Technician.builder()
+        technicianRepository.save(Technician.builder()
                 .user(techUser3)
                 .skills("Fiber Optics, Sensor Networks, SCADA telemetry, Security Systems")
                 .certifications("BICSI Installer 2, CompTIA Network+")
@@ -215,7 +215,7 @@ public class DataInitializer implements CommandLineRunner {
                 .reorderLevel(8)
                 .build());
 
-        Part part2 = partRepository.save(Part.builder()
+        partRepository.save(Part.builder()
                 .name("Digital Pressure Transducer 0-500 PSI")
                 .sku("PRT-SEN-042")
                 .description("4-20mA output stainless steel pressure sensor")
@@ -224,7 +224,7 @@ public class DataInitializer implements CommandLineRunner {
                 .reorderLevel(5)
                 .build());
 
-        Part part3 = partRepository.save(Part.builder()
+        partRepository.save(Part.builder()
                 .name("Centrifugal Pump Impeller (Bronze 8\")")
                 .sku("PRT-PMP-109")
                 .description("Heavy-duty replacement impeller for 3-phase coolant pumps")
@@ -233,7 +233,7 @@ public class DataInitializer implements CommandLineRunner {
                 .reorderLevel(5)
                 .build());
 
-        Part part4 = partRepository.save(Part.builder()
+        partRepository.save(Part.builder()
                 .name("HEPA Cleanroom Filter Cartridge (24x24x12)")
                 .sku("PRT-FLT-880")
                 .description("99.99% efficiency particulate air filter for ISO labs")

@@ -1,6 +1,5 @@
 package com.keystone.fsm.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.time.LocalDateTime;

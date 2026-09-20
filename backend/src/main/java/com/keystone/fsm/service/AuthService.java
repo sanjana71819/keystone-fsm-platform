@@ -101,6 +101,7 @@ public class AuthService {
         User savedUser = userRepository.save(user);
 
         Long customerId = null;
+        Long technicianId = null;
         if (role == Role.CUSTOMER) {
             Customer customer = Customer.builder()
                     .user(savedUser)
@@ -115,6 +116,7 @@ public class AuthService {
                     .available(true)
                     .build();
             Technician savedTechnician = technicianRepository.save(technician);
+            technicianId = savedTechnician.getId();
         }
 
         String jwt = tokenProvider.generateTokenFromUsername(savedUser.getUsername());
@@ -129,6 +131,7 @@ public class AuthService {
                 .firstName(savedUser.getFirstName())
                 .lastName(savedUser.getLastName())
                 .customerId(customerId)
+                .technicianId(technicianId)
                 .build();
     }
 
