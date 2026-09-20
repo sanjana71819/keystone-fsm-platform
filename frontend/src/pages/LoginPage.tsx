@@ -25,13 +25,15 @@ export const LoginPage: React.FC = () => {
     console.error('API Error details:', err?.response);
     if (!err.response) return 'Unable to connect to server. Please try again.';
     const data = err.response.data;
-    if (typeof data === 'string') return data;
-    if (data?.message) return data.message;
-    if (data?.error) return data.error;
-    if (typeof data === 'object') {
-      const messages = Object.values(data).filter(v => typeof v === 'string' && v.length > 0);
-      if (messages.length > 0) return messages.join(', ');
+    if (data?.fieldErrors && typeof data.fieldErrors === 'object') {
+      const fieldMsgs = Object.entries(data.fieldErrors)
+        .map(([field, msg]) => `${field}: ${msg}`)
+        .join(' | ');
+      if (fieldMsgs) return fieldMsgs;
     }
+    if (data?.message) return data.message;
+    if (typeof data === 'string') return data;
+    if (data?.error) return data.error;
     return fallback;
   };
 
