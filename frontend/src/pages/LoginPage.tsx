@@ -21,6 +21,19 @@ export const LoginPage: React.FC = () => {
 
   const from = (location.state as any)?.from?.pathname || '/dashboard';
 
+  const getErrorMessage = (err: any, fallback: string) => {
+    if (!err.response) return 'Unable to connect to server. Please try again.';
+    const data = err.response.data;
+    if (typeof data === 'string') return data;
+    if (data?.message) return data.message;
+    if (data?.error) return data.error;
+    if (typeof data === 'object') {
+      const messages = Object.values(data).filter(v => typeof v === 'string');
+      if (messages.length > 0) return messages.join(', ');
+    }
+    return fallback;
+  };
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -34,7 +47,7 @@ export const LoginPage: React.FC = () => {
         navigate(from === '/login' ? '/dashboard' : from);
       }
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Invalid username or password');
+      setError(getErrorMessage(err, 'Invalid username or password'));
     } finally {
       setLoading(false);
     }
@@ -58,7 +71,7 @@ export const LoginPage: React.FC = () => {
       await login({ username, password });
       navigate('/portal');
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Registration failed. Please check your information.');
+      setError(getErrorMessage(err, 'Registration failed. Please check your information.'));
     } finally {
       setLoading(false);
     }
