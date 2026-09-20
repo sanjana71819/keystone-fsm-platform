@@ -43,7 +43,8 @@ export const LoginPage: React.FC = () => {
     setLoading(true);
 
     try {
-      const res = await login({ username, password });
+      const cleanUsername = username.trim();
+      const res = await login({ username: cleanUsername, password });
       if (res.role === 'CUSTOMER') {
         navigate('/portal');
       } else {
