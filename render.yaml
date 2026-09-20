@@ -1,14 +1,13 @@
 services:
   - type: web
     name: keystone-fsm-backend
-    env: java
-    rootDir: backend
-    buildCommand: mvn clean package -DskipTests
-    startCommand: java -jar target/fsm-backend-1.0.0.jar
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
     envVars:
       - key: PORT
-        value: 8080
+        value: "8080"
       - key: SPRING_PROFILES_ACTIVE
-        value: dev
+        value: "dev"
       - key: JWT_SECRET
-        value: S3cr3tK3yst0n3FSM_ChangeThisInProductionUseAtLeast32Chars!
+        value: "S3cr3tK3yst0n3FSM_ChangeThisInProductionUseAtLeast32Chars!"
